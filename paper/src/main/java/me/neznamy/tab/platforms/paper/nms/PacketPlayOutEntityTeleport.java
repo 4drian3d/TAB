@@ -58,7 +58,15 @@ public class PacketPlayOutEntityTeleport implements TabPacket {
     public Object build() throws ReflectiveOperationException {
         NMSStorage nms = NMSStorage.getInstance();
         Object nmsPacket;
+<<<<<<< HEAD
         nmsPacket = CONSTRUCTOR.newInstance(nms.dummyEntity);
+=======
+        if (nms.getMinorVersion() >= 17) {
+            nmsPacket = CONSTRUCTOR.newInstance(nms.dummyEntity);
+        } else {
+            nmsPacket = CONSTRUCTOR.newInstance();
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         ENTITY_ID.set(nmsPacket, entityId);
         X.set(nmsPacket, location.getX());
         Y.set(nmsPacket, location.getY());
@@ -67,4 +75,12 @@ public class PacketPlayOutEntityTeleport implements TabPacket {
         PITCH.set(nmsPacket, (byte) (location.getPitch()/360*256));
         return nmsPacket;
     }
+<<<<<<< HEAD
+=======
+
+    private int floor(double paramDouble) {
+        int i = (int)paramDouble;
+        return paramDouble < i ? i - 1 : i;
+    }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 }

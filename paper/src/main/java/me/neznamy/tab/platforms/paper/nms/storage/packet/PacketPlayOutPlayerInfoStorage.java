@@ -48,6 +48,10 @@ public class PacketPlayOutPlayerInfoStorage {
     }
 
     public static Object build(PacketPlayOutPlayerInfo packet, ProtocolVersion clientVersion) throws ReflectiveOperationException {
+<<<<<<< HEAD
+=======
+        NMSStorage nms = NMSStorage.getInstance();
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         Object nmsPacket;
         if (packet.getActions().contains(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER)) {
             return newClientboundPlayerInfoRemovePacket.newInstance(
@@ -65,6 +69,10 @@ public class PacketPlayOutPlayerInfoStorage {
     }
 
     public static PacketPlayOutPlayerInfo read(Object nmsPacket) throws ReflectiveOperationException {
+<<<<<<< HEAD
+=======
+        NMSStorage nms = NMSStorage.getInstance();
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         if (ClientboundPlayerInfoRemovePacket != null && ClientboundPlayerInfoRemovePacket.isInstance(nmsPacket)) {
             List<UUID> entries = (List<UUID>) ClientboundPlayerInfoRemovePacket_getEntries.invoke(nmsPacket);
             return new PacketPlayOutPlayerInfo(

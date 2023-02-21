@@ -56,7 +56,16 @@ public class MojangModernNMSStorage extends NMSStorage {
         EntityLiving = Class.forName("net.minecraft.world.entity.LivingEntity");
         PlayerConnection = Class.forName("net.minecraft.server.network.ServerGamePacketListenerImpl");
         PacketPlayOutPlayerListHeaderFooterStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundTabListPacket");
+<<<<<<< HEAD
         PacketPlayOutChatStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundSystemChatPacket");
+=======
+        if (minorVersion >= 19) {
+            PacketPlayOutChatStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundSystemChatPacket");
+        } else {
+            PacketPlayOutChatStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundChatPacket");
+            PacketPlayOutChatStorage.ChatMessageTypeClass = (Class<Enum>) Class.forName("net.minecraft.network.chat.ChatType");
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 
         // DataWatcher
         DataWatcher.CLASS = Class.forName("net.minecraft.network.syncher.SynchedEntityData");
@@ -64,10 +73,23 @@ public class MojangModernNMSStorage extends NMSStorage {
         DataWatcherObject.CLASS = Class.forName("net.minecraft.network.syncher.EntityDataAccessor");
         DataWatcherHelper.DataWatcherRegistry = Class.forName("net.minecraft.network.syncher.EntityDataSerializers");
         DataWatcherHelper.DataWatcherSerializer = Class.forName("net.minecraft.network.syncher.EntityDataSerializer");
+<<<<<<< HEAD
         DataWatcher.DataValue = Class.forName("net.minecraft.network.syncher.SynchedEntityData$DataValue");
 
         // Entities
         PacketPlayOutSpawnEntityLiving.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundAddEntityPacket");
+=======
+        if (is1_19_3Plus()) {
+            DataWatcher.DataValue = Class.forName("net.minecraft.network.syncher.SynchedEntityData$DataValue");
+        }
+
+        // Entities
+        if (minorVersion >= 19) {
+            PacketPlayOutSpawnEntityLiving.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundAddEntityPacket");
+        } else {
+            PacketPlayOutSpawnEntityLiving.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundAddMobPacket");
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         PacketPlayOutEntityTeleport.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket");
         PacketPlayInUseEntity = Class.forName("net.minecraft.network.protocol.game.ServerboundInteractPacket");
         PacketPlayInUseEntity$d = Class.forName("net.minecraft.network.protocol.game.ServerboundInteractPacket$InteractionAction");
@@ -82,6 +104,7 @@ public class MojangModernNMSStorage extends NMSStorage {
         }
 
         // Player Info
+<<<<<<< HEAD
         PacketPlayOutPlayerInfoStorage.ProfilePublicKey = Class.forName("net.minecraft.world.entity.player.ProfilePublicKey");
         PacketPlayOutPlayerInfoStorage.ProfilePublicKey$a = Class.forName("net.minecraft.world.entity.player.ProfilePublicKey$Data");
         PacketPlayOutPlayerInfoStorage.ClientboundPlayerInfoRemovePacket = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket");
@@ -90,6 +113,24 @@ public class MojangModernNMSStorage extends NMSStorage {
         PacketPlayOutPlayerInfoStorage.PlayerInfoDataStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket$Entry");
         PacketPlayOutPlayerInfoStorage.RemoteChatSession = Class.forName("net.minecraft.network.chat.RemoteChatSession");
         PacketPlayOutPlayerInfoStorage.RemoteChatSession$Data = Class.forName("net.minecraft.network.chat.RemoteChatSession$Data");
+=======
+        if (minorVersion >= 19) {
+            PacketPlayOutPlayerInfoStorage.ProfilePublicKey = Class.forName("net.minecraft.world.entity.player.ProfilePublicKey");
+            PacketPlayOutPlayerInfoStorage.ProfilePublicKey$a = Class.forName("net.minecraft.world.entity.player.ProfilePublicKey$Data");
+        }
+        if (is1_19_3Plus()) {
+            PacketPlayOutPlayerInfoStorage.ClientboundPlayerInfoRemovePacket = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket");
+            PacketPlayOutPlayerInfoStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket");
+            PacketPlayOutPlayerInfoStorage.EnumPlayerInfoActionClass = (Class<Enum>) Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket$Action");
+            PacketPlayOutPlayerInfoStorage.PlayerInfoDataStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket$Entry");
+            PacketPlayOutPlayerInfoStorage.RemoteChatSession = Class.forName("net.minecraft.network.chat.RemoteChatSession");
+            PacketPlayOutPlayerInfoStorage.RemoteChatSession$Data = Class.forName("net.minecraft.network.chat.RemoteChatSession$Data");
+        } else {
+            PacketPlayOutPlayerInfoStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket");
+            PacketPlayOutPlayerInfoStorage.EnumPlayerInfoActionClass = (Class<Enum>) Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket$Action");
+            PacketPlayOutPlayerInfoStorage.PlayerInfoDataStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket$PlayerUpdate");
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         PacketPlayOutPlayerInfoStorage.EnumGamemodeClass = (Class<Enum>) Class.forName("net.minecraft.world.level.GameType");
 
         // Scoreboard

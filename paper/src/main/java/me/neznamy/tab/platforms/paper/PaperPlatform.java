@@ -14,6 +14,10 @@ import me.neznamy.tab.platforms.paper.features.PerWorldPlayerList;
 import me.neznamy.tab.platforms.paper.features.PetFix;
 import me.neznamy.tab.platforms.paper.features.WitherBossBar;
 import me.neznamy.tab.platforms.paper.features.unlimitedtags.PaperNameTagX;
+<<<<<<< HEAD
+=======
+import me.neznamy.tab.platforms.paper.nms.storage.nms.NMSStorage;
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 import me.neznamy.tab.platforms.paper.permission.Vault;
 import me.neznamy.tab.shared.TAB;
 import me.neznamy.tab.shared.backend.BackendPlatform;
@@ -33,6 +37,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
+<<<<<<< HEAD
+=======
+import java.util.Collection;
+
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 /**
  * Implementation of Platform interface for Paper platform
  */
@@ -82,7 +91,10 @@ public class PaperPlatform extends BackendPlatform {
         }
     }
 
+<<<<<<< HEAD
     @Override
+=======
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     public BossBarManagerImpl getLegacyBossBar() {
         return new WitherBossBar(plugin);
     }
@@ -90,7 +102,11 @@ public class PaperPlatform extends BackendPlatform {
     @Override
     public String getPluginVersion(String plugin) {
         Plugin pl = Bukkit.getPluginManager().getPlugin(plugin);
+<<<<<<< HEAD
         return pl == null ? null : pl.getPluginMeta().getVersion();
+=======
+        return pl == null ? null : pl.getDescription().getVersion();
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     }
 
     @Override
@@ -229,7 +245,11 @@ public class PaperPlatform extends BackendPlatform {
     public void sendConsoleMessage(String message, boolean translateColors) {
         Bukkit.getConsoleSender().sendMessage("[TAB] " + (translateColors ?
                 EnumChatFormat.color(RGBUtils.getInstance().convertToBukkitFormat(message,
+<<<<<<< HEAD
                         true))
+=======
+                        TAB.getInstance().getServerVersion().getMinorVersion() >= 16))
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
                 : message));
     }
 }

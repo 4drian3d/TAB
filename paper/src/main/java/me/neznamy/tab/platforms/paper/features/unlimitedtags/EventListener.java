@@ -18,7 +18,11 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 public class EventListener implements Listener {
 
     /** Reference to the main feature */
+<<<<<<< HEAD
     private final PaperNameTagX feature;
+=======
+    private final BukkitNameTagX feature;
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 
     /**
      * Sneak event listener to de-spawn and spawn armor stands to skip animation

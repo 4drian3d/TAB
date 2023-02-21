@@ -11,6 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.neznamy.tab.api.TabFeature;
 import me.neznamy.tab.api.TabPlayer;
+<<<<<<< HEAD
+=======
+import me.neznamy.tab.platforms.paper.nms.storage.nms.NMSStorage;
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 import me.neznamy.tab.api.TabConstants;
 import me.neznamy.tab.platforms.paper.nms.storage.packet.PacketPlayOutPlayerInfoStorage;
 import me.neznamy.tab.platforms.paper.nms.storage.packet.PacketPlayOutScoreboardDisplayObjectiveStorage;
@@ -26,6 +30,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PaperPipelineInjector extends PipelineInjector {
 
+<<<<<<< HEAD
+=======
+    /** NMS data storage */
+    private final NMSStorage nms = NMSStorage.getInstance();
+
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     @Getter private final Function<TabPlayer, ChannelDuplexHandler> channelFunction = PaperChannelDuplexHandler::new;
 
     /**

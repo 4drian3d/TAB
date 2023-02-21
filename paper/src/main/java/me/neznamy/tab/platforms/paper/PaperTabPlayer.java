@@ -1,6 +1,11 @@
 package me.neznamy.tab.platforms.paper;
 
+<<<<<<< HEAD
 import com.destroystokyo.paper.profile.ProfileProperty;
+=======
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 import io.netty.channel.Channel;
 import lombok.NonNull;
 import me.neznamy.tab.api.chat.rgb.RGBUtils;
@@ -67,7 +72,17 @@ public class PaperTabPlayer extends ITabPlayer {
 
     @Override
     public int getPing() {
+<<<<<<< HEAD
         return getPlayer().getPing();
+=======
+        try {
+            int ping = NMSStorage.getInstance().PING.getInt(handle);
+            if (ping > 10000 || ping < 0) ping = -1;
+            return ping;
+        } catch (IllegalAccessException e) {
+            return -1;
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     }
 
     @Override
@@ -100,7 +115,11 @@ public class PaperTabPlayer extends ITabPlayer {
         BossBar bar = bossBars.get(packet.getId());
         if (packet.getAction() == PacketPlayOutBoss.Action.ADD) {
             if (bossBars.containsKey(packet.getId())) return;
+<<<<<<< HEAD
             bar = Bukkit.createBossBar(RGBUtils.getInstance().convertToBukkitFormat(packet.getName(), getVersion().getMinorVersion() >= 16),
+=======
+            bar = Bukkit.createBossBar(RGBUtils.getInstance().convertToBukkitFormat(packet.getName(), getVersion().getMinorVersion() >= 16 && TAB.getInstance().getServerVersion().getMinorVersion() >= 16),
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
                     BarColor.valueOf(packet.getColor().name()),
                     BarStyle.valueOf(packet.getOverlay().getBukkitName()));
             if (packet.isCreateWorldFog()) bar.addFlag(BarFlag.CREATE_FOG);
@@ -121,7 +140,11 @@ public class PaperTabPlayer extends ITabPlayer {
             bar.setProgress(packet.getPct());
             break;
         case UPDATE_NAME:
+<<<<<<< HEAD
             bar.setTitle(RGBUtils.getInstance().convertToBukkitFormat(packet.getName(), getVersion().getMinorVersion() >= 16));
+=======
+            bar.setTitle(RGBUtils.getInstance().convertToBukkitFormat(packet.getName(), getVersion().getMinorVersion() >= 16 && TAB.getInstance().getServerVersion().getMinorVersion() >= 16));
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
             break;
         case UPDATE_STYLE:
             bar.setColor(BarColor.valueOf(packet.getColor().name()));
@@ -161,18 +184,27 @@ public class PaperTabPlayer extends ITabPlayer {
     @Override
     public boolean isDisguised() {
         try {
+<<<<<<< HEAD
             if (!((PaperPlatform)TAB.getInstance().getPlatform()).isLibsDisguisesEnabled()) return false;
+=======
+            if (!((BukkitPlatform)TAB.getInstance().getPlatform()).isLibsDisguisesEnabled()) return false;
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
             return (boolean) Class.forName("me.libraryaddict.disguise.DisguiseAPI").getMethod("isDisguised", Entity.class).invoke(null, getPlayer());
         } catch (LinkageError | ReflectiveOperationException e) {
             //java.lang.NoClassDefFoundError: Could not initialize class me.libraryaddict.disguise.DisguiseAPI
             TAB.getInstance().getErrorManager().printError("Failed to check disguise status using LibsDisguises", e);
+<<<<<<< HEAD
             ((PaperPlatform)TAB.getInstance().getPlatform()).setLibsDisguisesEnabled(false);
+=======
+            ((BukkitPlatform)TAB.getInstance().getPlatform()).setLibsDisguisesEnabled(false);
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
             return false;
         }
     }
 
     @Override
     public Skin getSkin() {
+<<<<<<< HEAD
         Collection<ProfileProperty> col = getPlayer().getPlayerProfile().getProperties();
         if (col.isEmpty()) return null; //offline mode
         for (ProfileProperty property : col) {
@@ -181,6 +213,17 @@ public class PaperTabPlayer extends ITabPlayer {
             }
         }
         return null;
+=======
+        try {
+            Collection<Property> col = ((GameProfile)NMSStorage.getInstance().getProfile.invoke(handle)).getProperties().get("textures");
+            if (col.isEmpty()) return null; //offline mode
+            Property property = col.iterator().next();
+            return new Skin(property.getValue(), property.getSignature());
+        } catch (ReflectiveOperationException e) {
+            TAB.getInstance().getErrorManager().printError("Failed to get skin of " + getName(), e);
+            return null;
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     }
 
     @Override

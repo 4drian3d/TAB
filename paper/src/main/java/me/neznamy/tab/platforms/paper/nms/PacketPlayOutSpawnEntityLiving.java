@@ -83,7 +83,19 @@ public class PacketPlayOutSpawnEntityLiving implements TabPacket {
         X.set(nmsPacket, location.getX());
         Y.set(nmsPacket, location.getY());
         Z.set(nmsPacket, location.getZ());
+<<<<<<< HEAD
         ENTITY_TYPE.set(nmsPacket, EntityTypes_ARMOR_STAND); // :(
         return nmsPacket;
     }
+=======
+        int id = entityIds.get(entityType);
+        ENTITY_TYPE.set(nmsPacket, EntityTypes_ARMOR_STAND); // :(
+        return nmsPacket;
+    }
+
+    private int floor(double paramDouble) {
+        int i = (int)paramDouble;
+        return paramDouble < i ? i - 1 : i;
+    }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 }

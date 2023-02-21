@@ -9,6 +9,10 @@ import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.chat.IChatBaseComponent;
 import me.neznamy.tab.api.chat.WrappedChatComponent;
 import me.neznamy.tab.api.util.ComponentCache;
+<<<<<<< HEAD
+=======
+import me.neznamy.tab.api.util.ReflectionUtils;
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityDestroy;
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityMetadata;
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityTeleport;
@@ -40,7 +44,14 @@ public abstract class NMSStorage {
     protected final String serverPackage = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 
     /** Server's minor version */
+<<<<<<< HEAD
     @Getter protected final int minorVersion = 19;
+=======
+    @Getter protected final int minorVersion = Integer.parseInt(serverPackage.split("_")[1]);
+
+    /** Flag determining whether the server version is at least 1.19.3 or not */
+    @Getter private final boolean is1_19_3Plus = ReflectionUtils.classExists("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket");
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 
     /** Basic universal values */
     protected Class<?> Packet;
@@ -100,6 +111,7 @@ public abstract class NMSStorage {
      *          If some field, constructor or method was not found
      */
     public NMSStorage() throws ReflectiveOperationException {
+<<<<<<< HEAD
         ProtocolVersion.UNKNOWN_SERVER_VERSION.setMinorVersion(19); //fixing compatibility with forks that set version field value to "Unknown"
         loadClasses();
         NETWORK_MANAGER = getFields(PlayerConnection, NetworkManager).get(0);
@@ -108,6 +120,20 @@ public abstract class NMSStorage {
         Constructor<?> newEntityArmorStand = EntityArmorStand.getConstructor(World, double.class, double.class, double.class);
         Method World_getHandle = Class.forName("org.bukkit.craftbukkit." + serverPackage + ".CraftWorld").getMethod("getHandle");
         dummyEntity = newEntityArmorStand.newInstance(World_getHandle.invoke(Bukkit.getWorlds().get(0)), 0, 0, 0);
+=======
+        ProtocolVersion.UNKNOWN_SERVER_VERSION.setMinorVersion(minorVersion); //fixing compatibility with forks that set version field value to "Unknown"
+        loadClasses();
+        if (minorVersion >= 7) {
+            NETWORK_MANAGER = getFields(PlayerConnection, NetworkManager).get(0);
+        }
+        if (minorVersion >= 8) {
+            CHANNEL = getFields(NetworkManager, Channel.class).get(0);
+            getProfile = getMethods(EntityHuman, GameProfile.class).get(0);
+            Constructor<?> newEntityArmorStand = EntityArmorStand.getConstructor(World, double.class, double.class, double.class);
+            Method World_getHandle = Class.forName("org.bukkit.craftbukkit." + serverPackage + ".CraftWorld").getMethod("getHandle");
+            dummyEntity = newEntityArmorStand.newInstance(World_getHandle.invoke(Bukkit.getWorlds().get(0)), 0, 0, 0);
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         PLAYER_CONNECTION = getFields(EntityPlayer, PlayerConnection).get(0);
         getHandle = Class.forName("org.bukkit.craftbukkit." + serverPackage + ".entity.CraftPlayer").getMethod("getHandle");
         sendPacket = getMethods(PlayerConnection, void.class, Packet).get(0);
@@ -139,8 +165,15 @@ public abstract class NMSStorage {
     protected void otherEntity() {
         PacketPlayOutEntity_ENTITYID = getFields(PacketPlayOutEntity, int.class).get(0);
         PacketPlayOutNamedEntitySpawn_ENTITYID = getFields(PacketPlayOutNamedEntitySpawn, int.class).get(0);
+<<<<<<< HEAD
         PacketPlayInUseEntity_ENTITY = getFields(PacketPlayInUseEntity, int.class).get(0);
         PacketPlayInUseEntity_ACTION = getFields(PacketPlayInUseEntity, EnumEntityUseAction).get(0);
+=======
+        if (minorVersion >= 7) {
+            PacketPlayInUseEntity_ENTITY = getFields(PacketPlayInUseEntity, int.class).get(0);
+            PacketPlayInUseEntity_ACTION = getFields(PacketPlayInUseEntity, EnumEntityUseAction).get(0);
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     }
 
     /**
@@ -272,6 +305,13 @@ public abstract class NMSStorage {
      *          if thrown by reflective operation
      */
     public Object newScoreboardObjective(String objectiveName) throws ReflectiveOperationException {
+<<<<<<< HEAD
         return PacketPlayOutScoreboardObjectiveStorage.newScoreboardObjective.newInstance(null, objectiveName, null, toNMSComponent(new IChatBaseComponent(""), TabAPI.getInstance().getServerVersion()), null);
+=======
+        if (minorVersion >= 13) {
+            return PacketPlayOutScoreboardObjectiveStorage.newScoreboardObjective.newInstance(null, objectiveName, null, toNMSComponent(new IChatBaseComponent(""), TabAPI.getInstance().getServerVersion()), null);
+        }
+        return PacketPlayOutScoreboardObjectiveStorage.newScoreboardObjective.newInstance(null, objectiveName, IScoreboardCriteria_self.get(null));
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     }
 }

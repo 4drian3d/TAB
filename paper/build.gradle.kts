@@ -9,6 +9,7 @@ dependencies {
     compileOnly(libs.authlib)
 }
 
+<<<<<<< HEAD
 repositories {
     maven("https://repo.kryptonmc.org/releases")
     maven("https://repo.opencollab.dev/maven-snapshots/")
@@ -18,6 +19,8 @@ repositories {
     maven("https://jitpack.io")
 }
 
+=======
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 tasks.compileJava {
     options.release.set(17)
 }

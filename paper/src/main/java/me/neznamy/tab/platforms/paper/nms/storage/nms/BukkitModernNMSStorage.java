@@ -32,11 +32,26 @@ public class BukkitModernNMSStorage extends NMSStorage {
         DataWatcherHelper.DataWatcherSerializer_BYTE = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("a").get(null);
         DataWatcherHelper.DataWatcherSerializer_FLOAT = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("c").get(null);
         DataWatcherHelper.DataWatcherSerializer_STRING = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("d").get(null);
+<<<<<<< HEAD
         DataWatcherHelper.DataWatcherSerializer_OPTIONAL_COMPONENT = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("g").get(null);
         DataWatcherHelper.DataWatcherSerializer_BOOLEAN = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("j").get(null);
         PacketPlayOutSpawnEntityLiving.EntityTypes_ARMOR_STAND = PacketPlayOutSpawnEntityLiving.EntityTypes.getDeclaredField("d").get(null);
         (PacketPlayOutSpawnEntityLiving.ENTITY_TYPE = PacketPlayOutSpawnEntityLiving.CLASS.getDeclaredField("e")).setAccessible(true);
         DataWatcher.packDirty = DataWatcher.CLASS.getMethod("b");
+=======
+        if (is1_19_3Plus()) {
+            DataWatcherHelper.DataWatcherSerializer_OPTIONAL_COMPONENT = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("g").get(null);
+            DataWatcherHelper.DataWatcherSerializer_BOOLEAN = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("j").get(null);
+        } else {
+            DataWatcherHelper.DataWatcherSerializer_OPTIONAL_COMPONENT = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("f").get(null);
+            DataWatcherHelper.DataWatcherSerializer_BOOLEAN = DataWatcherHelper.DataWatcherRegistry.getDeclaredField("i").get(null);
+        }
+        if (minorVersion >= 19) {
+            PacketPlayOutSpawnEntityLiving.EntityTypes_ARMOR_STAND = PacketPlayOutSpawnEntityLiving.EntityTypes.getDeclaredField("d").get(null);
+            (PacketPlayOutSpawnEntityLiving.ENTITY_TYPE = PacketPlayOutSpawnEntityLiving.CLASS.getDeclaredField("e")).setAccessible(true);
+            DataWatcher.packDirty = DataWatcher.CLASS.getMethod("b");
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     }
 
     @Override
@@ -55,7 +70,16 @@ public class BukkitModernNMSStorage extends NMSStorage {
         PlayerConnection = Class.forName("net.minecraft.server.network.PlayerConnection");
 
         PacketPlayOutPlayerListHeaderFooterStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutPlayerListHeaderFooter");
+<<<<<<< HEAD
         PacketPlayOutChatStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundSystemChatPacket");
+=======
+        if (minorVersion >= 19) {
+            PacketPlayOutChatStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundSystemChatPacket");
+        } else {
+            PacketPlayOutChatStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutChat");
+            PacketPlayOutChatStorage.ChatMessageTypeClass = (Class<Enum>) Class.forName("net.minecraft.network.chat.ChatMessageType");
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 
         // DataWatcher
         DataWatcher.CLASS = Class.forName("net.minecraft.network.syncher.DataWatcher");
@@ -63,10 +87,23 @@ public class BukkitModernNMSStorage extends NMSStorage {
         DataWatcherObject.CLASS = Class.forName("net.minecraft.network.syncher.DataWatcherObject");
         DataWatcherHelper.DataWatcherRegistry = Class.forName("net.minecraft.network.syncher.DataWatcherRegistry");
         DataWatcherHelper.DataWatcherSerializer = Class.forName("net.minecraft.network.syncher.DataWatcherSerializer");
+<<<<<<< HEAD
         DataWatcher.DataValue = Class.forName("net.minecraft.network.syncher.DataWatcher$b");
 
         // Entities
         PacketPlayOutSpawnEntityLiving.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity");
+=======
+        if (is1_19_3Plus()) {
+            DataWatcher.DataValue = Class.forName("net.minecraft.network.syncher.DataWatcher$b");
+        }
+
+        // Entities
+        if (minorVersion >= 19) {
+            PacketPlayOutSpawnEntityLiving.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity");
+        } else {
+            PacketPlayOutSpawnEntityLiving.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving");
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         PacketPlayOutEntityTeleport.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport");
         PacketPlayInUseEntity = Class.forName("net.minecraft.network.protocol.game.PacketPlayInUseEntity");
         PacketPlayInUseEntity$d = Class.forName("net.minecraft.network.protocol.game.PacketPlayInUseEntity$d");
@@ -76,6 +113,7 @@ public class BukkitModernNMSStorage extends NMSStorage {
         PacketPlayOutEntityMetadata.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata");
         PacketPlayOutNamedEntitySpawn = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutNamedEntitySpawn");
         EnumEntityUseAction = (Class<Enum>) Class.forName("net.minecraft.network.protocol.game.PacketPlayInUseEntity$EnumEntityUseAction");
+<<<<<<< HEAD
         PacketPlayOutSpawnEntityLiving.EntityTypes = Class.forName("net.minecraft.world.entity.EntityTypes");
 
         // Player Info
@@ -87,6 +125,29 @@ public class BukkitModernNMSStorage extends NMSStorage {
         PacketPlayOutPlayerInfoStorage.PlayerInfoDataStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket$b");
         PacketPlayOutPlayerInfoStorage.RemoteChatSession = Class.forName("net.minecraft.network.chat.RemoteChatSession");
         PacketPlayOutPlayerInfoStorage.RemoteChatSession$Data = Class.forName("net.minecraft.network.chat.RemoteChatSession$a");
+=======
+        if (minorVersion >= 19) {
+            PacketPlayOutSpawnEntityLiving.EntityTypes = Class.forName("net.minecraft.world.entity.EntityTypes");
+        }
+
+        // Player Info
+        if (minorVersion >= 19) {
+            PacketPlayOutPlayerInfoStorage.ProfilePublicKey = Class.forName("net.minecraft.world.entity.player.ProfilePublicKey");
+            PacketPlayOutPlayerInfoStorage.ProfilePublicKey$a = Class.forName("net.minecraft.world.entity.player.ProfilePublicKey$a");
+        }
+        if (is1_19_3Plus()) {
+            PacketPlayOutPlayerInfoStorage.ClientboundPlayerInfoRemovePacket = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket");
+            PacketPlayOutPlayerInfoStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket");
+            PacketPlayOutPlayerInfoStorage.EnumPlayerInfoActionClass = (Class<Enum>) Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket$a");
+            PacketPlayOutPlayerInfoStorage.PlayerInfoDataStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket$b");
+            PacketPlayOutPlayerInfoStorage.RemoteChatSession = Class.forName("net.minecraft.network.chat.RemoteChatSession");
+            PacketPlayOutPlayerInfoStorage.RemoteChatSession$Data = Class.forName("net.minecraft.network.chat.RemoteChatSession$a");
+        } else {
+            PacketPlayOutPlayerInfoStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo");
+            PacketPlayOutPlayerInfoStorage.EnumPlayerInfoActionClass = (Class<Enum>) Class.forName("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
+            PacketPlayOutPlayerInfoStorage.PlayerInfoDataStorage.CLASS = Class.forName("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo$PlayerInfoData");
+        }
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         PacketPlayOutPlayerInfoStorage.EnumGamemodeClass = (Class<Enum>) Class.forName("net.minecraft.world.level.EnumGamemode");
 
         // Scoreboard

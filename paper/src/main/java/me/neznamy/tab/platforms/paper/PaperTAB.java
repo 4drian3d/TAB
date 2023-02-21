@@ -5,25 +5,40 @@ import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabConstants;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.chat.EnumChatFormat;
+<<<<<<< HEAD
 import me.neznamy.tab.api.util.SupplierWithException;
+=======
+import me.neznamy.tab.api.util.SupplierWithException;;
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 import me.neznamy.tab.platforms.paper.nms.storage.nms.*;
 import me.neznamy.tab.shared.TAB;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
+<<<<<<< HEAD
 import org.bukkit.Location;
+=======
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
+=======
+import java.util.Arrays;
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 import java.util.List;
 
 /**
  * Main class for Bukkit platform
  */
+<<<<<<< HEAD
 public class PaperTAB extends JavaPlugin {
+=======
+public class BukkitTAB extends JavaPlugin {
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
 
     @Override
     public void onEnable() {
@@ -34,19 +49,35 @@ public class PaperTAB extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+<<<<<<< HEAD
         PaperPlatform platform = new PaperPlatform(this);
+=======
+        BukkitPlatform platform = new BukkitPlatform(this);
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         TAB.setInstance(new TAB(platform, ProtocolVersion.fromFriendlyName(version), version + " (" + serverPackage + ")", getDataFolder(), getLogger()));
         if (TAB.getInstance().getServerVersion() == ProtocolVersion.UNKNOWN_SERVER_VERSION) {
             Bukkit.getConsoleSender().sendMessage(EnumChatFormat.color("&c[TAB] Unknown server version: " + Bukkit.getBukkitVersion() + "! Plugin may not work correctly."));
         }
+<<<<<<< HEAD
         Bukkit.getPluginManager().registerEvents(new PaperEventListener(platform), this);
+=======
+        Bukkit.getPluginManager().registerEvents(new BukkitEventListener(platform), this);
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
         TAB.getInstance().load();
         Metrics metrics = new Metrics(this, 5304);
         metrics.addCustomChart(new SimplePie(TabConstants.MetricsChart.UNLIMITED_NAME_TAG_MODE_ENABLED, () -> TAB.getInstance().getFeatureManager().isFeatureEnabled(TabConstants.Feature.UNLIMITED_NAME_TAGS) ? "Yes" : "No"));
         metrics.addCustomChart(new SimplePie(TabConstants.MetricsChart.PLACEHOLDER_API, () -> Bukkit.getPluginManager().isPluginEnabled(TabConstants.Plugin.PLACEHOLDER_API) ? "Yes" : "No"));
         metrics.addCustomChart(new SimplePie(TabConstants.MetricsChart.PERMISSION_SYSTEM, () -> TAB.getInstance().getGroupManager().getPlugin().getName()));
         metrics.addCustomChart(new SimplePie(TabConstants.MetricsChart.SERVER_VERSION, () -> "1." + TAB.getInstance().getServerVersion().getMinorVersion() + ".x"));
+<<<<<<< HEAD
         getServer().getCommandMap().register("tab", new TABCommand());
+=======
+        PluginCommand cmd = Bukkit.getPluginCommand("tab");
+        if (cmd == null) return;
+        TABCommand command = new TABCommand();
+        cmd.setExecutor(command);
+        cmd.setTabCompleter(command);
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
     }
 
     @Override
@@ -100,6 +131,7 @@ public class PaperTAB extends JavaPlugin {
     /**
      * Command handler for /tab command
      */
+<<<<<<< HEAD
     private static class TABCommand extends Command {
         private TABCommand() {
             super("tab", "Plugin's main command", "", List.of());
@@ -107,6 +139,12 @@ public class PaperTAB extends JavaPlugin {
 
         @Override
         public boolean execute(@NotNull CommandSender sender, @NotNull String label, String[] args) {
+=======
+    private static class TABCommand implements CommandExecutor, TabCompleter {
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
             if (TabAPI.getInstance().isPluginDisabled()) {
                 for (String message : TAB.getInstance().getDisabledCommand().execute(args, sender.hasPermission(TabConstants.Permission.COMMAND_RELOAD), sender.hasPermission(TabConstants.Permission.COMMAND_ALL))) {
                     sender.sendMessage(EnumChatFormat.color(message));
@@ -123,7 +161,11 @@ public class PaperTAB extends JavaPlugin {
         }
 
         @Override
+<<<<<<< HEAD
         public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, String[] args, Location location) {
+=======
+        public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+>>>>>>> 0a6a4f92 (Initial Paper plugin implementation)
             TabPlayer p = null;
             if (sender instanceof Player) {
                 p = TAB.getInstance().getPlayer(((Player)sender).getUniqueId());
