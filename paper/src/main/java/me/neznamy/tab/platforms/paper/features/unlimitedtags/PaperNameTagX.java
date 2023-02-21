@@ -16,14 +16,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * The core class for unlimited NameTag mode on Bukkit
  */
-public class BukkitNameTagX extends BackendNameTagX {
+public class PaperNameTagX extends BackendNameTagX {
 
     /** Reference to NMS storage for quick access */
     private final NMSStorage nms = NMSStorage.getInstance();
@@ -38,7 +37,7 @@ public class BukkitNameTagX extends BackendNameTagX {
      * @param   plugin
      *          plugin instance
      */
-    public BukkitNameTagX(JavaPlugin plugin) {
+    public PaperNameTagX(JavaPlugin plugin) {
         Bukkit.getPluginManager().registerEvents(eventListener, plugin);
     }
 
@@ -108,19 +107,10 @@ public class BukkitNameTagX extends BackendNameTagX {
         HandlerList.unregisterAll(eventListener);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public List<Integer> getPassengers(Object entity) {
         Entity vehicle = (Entity) entity;
-        if (TabAPI.getInstance().getServerVersion().getMinorVersion() >= 11) {
-            return vehicle.getPassengers().stream().map(Entity::getEntityId).collect(Collectors.toList());
-        } else {
-            if (vehicle.getPassenger() != null) {
-                return Collections.singletonList(vehicle.getPassenger().getEntityId());
-            } else {
-                return Collections.emptyList();
-            }
-        }
+        return vehicle.getPassengers().stream().map(Entity::getEntityId).collect(Collectors.toList());
     }
 
     @Override
@@ -149,6 +139,6 @@ public class BukkitNameTagX extends BackendNameTagX {
 
     @Override
     public BackendArmorStand createArmorStand(BackendArmorStandManager feature, TabPlayer owner, String lineName, double yOffset, boolean staticOffset) {
-        return new BukkitArmorStand(this, feature, owner, lineName, yOffset, staticOffset);
+        return new PaperArmorStand(this, feature, owner, lineName, yOffset, staticOffset);
     }
 }

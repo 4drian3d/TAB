@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * The core for bukkit forwarding events into all enabled features
  */
 @RequiredArgsConstructor
-public class PapertEventListener implements Listener {
+public class PaperEventListener implements Listener {
 
     /** Platform instance */
     private final PaperPlatform platform;

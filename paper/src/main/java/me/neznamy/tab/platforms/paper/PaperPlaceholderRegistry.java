@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
@@ -28,7 +27,7 @@ public class PaperPlaceholderRegistry extends UniversalPlaceholderRegistry {
     /**
      * Constructs new instance and loads hooks
      */
-    public BukkitPlaceholderRegistry() {
+    public PaperPlaceholderRegistry() {
         if (Bukkit.getPluginManager().isPluginEnabled(TabConstants.Plugin.VAULT)) {
             RegisteredServiceProvider<Chat> rspChat = Bukkit.getServicesManager().getRegistration(Chat.class);
             if (rspChat != null) chat = rspChat.getProvider();

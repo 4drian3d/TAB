@@ -5,9 +5,8 @@ import me.neznamy.tab.api.protocol.PacketPlayOutChat;
 import me.neznamy.tab.platforms.paper.nms.storage.nms.NMSStorage;
 
 import java.lang.reflect.Constructor;
-import java.util.UUID;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings("rawtypes")
 public class PacketPlayOutChatStorage {
 
     public static Class<?> CLASS;
@@ -26,12 +25,6 @@ public class PacketPlayOutChatStorage {
     public static Object build(PacketPlayOutChat packet, ProtocolVersion clientVersion) throws ReflectiveOperationException {
         NMSStorage nms = NMSStorage.getInstance();
         Object component = nms.toNMSComponent(packet.getMessage(), clientVersion);
-        try {
-            return CONSTRUCTOR.newInstance(component, packet.getType() == PacketPlayOutChat.ChatMessageType.GAME_INFO);
-        } catch (Exception e) {
-            //1.19.0
-            return CONSTRUCTOR.newInstance(component, packet.getType().ordinal());
-        }
-        return packet;
+        return CONSTRUCTOR.newInstance(component, packet.getType() == PacketPlayOutChat.ChatMessageType.GAME_INFO);
     }
 }

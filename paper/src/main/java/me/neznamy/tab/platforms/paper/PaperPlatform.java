@@ -14,7 +14,6 @@ import me.neznamy.tab.platforms.paper.features.PerWorldPlayerList;
 import me.neznamy.tab.platforms.paper.features.PetFix;
 import me.neznamy.tab.platforms.paper.features.WitherBossBar;
 import me.neznamy.tab.platforms.paper.features.unlimitedtags.PaperNameTagX;
-import me.neznamy.tab.platforms.paper.nms.storage.nms.NMSStorage;
 import me.neznamy.tab.platforms.paper.permission.Vault;
 import me.neznamy.tab.shared.TAB;
 import me.neznamy.tab.shared.backend.BackendPlatform;
@@ -33,8 +32,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 
 /**
  * Implementation of Platform interface for Paper platform
@@ -85,6 +82,7 @@ public class PaperPlatform extends BackendPlatform {
         }
     }
 
+    @Override
     public BossBarManagerImpl getLegacyBossBar() {
         return new WitherBossBar(plugin);
     }
@@ -92,7 +90,7 @@ public class PaperPlatform extends BackendPlatform {
     @Override
     public String getPluginVersion(String plugin) {
         Plugin pl = Bukkit.getPluginManager().getPlugin(plugin);
-        return pl == null ? null : pl.getDescription().getVersion();
+        return pl == null ? null : pl.getPluginMeta().getVersion();
     }
 
     @Override
@@ -231,7 +229,7 @@ public class PaperPlatform extends BackendPlatform {
     public void sendConsoleMessage(String message, boolean translateColors) {
         Bukkit.getConsoleSender().sendMessage("[TAB] " + (translateColors ?
                 EnumChatFormat.color(RGBUtils.getInstance().convertToBukkitFormat(message,
-                        TAB.getInstance().getServerVersion().getMinorVersion() >= 16))
+                        true))
                 : message));
     }
 }

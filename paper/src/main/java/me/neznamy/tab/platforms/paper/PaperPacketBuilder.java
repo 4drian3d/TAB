@@ -2,18 +2,11 @@ package me.neznamy.tab.platforms.paper;
 
 import me.neznamy.tab.api.ProtocolVersion;
 import me.neznamy.tab.api.protocol.*;
-import me.neznamy.tab.api.protocol.PacketPlayOutBoss.Action;
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityDestroy;
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityMetadata;
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityTeleport;
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutSpawnEntityLiving;
-import me.neznamy.tab.platforms.paper.nms.datawatcher.DataWatcher;
-import me.neznamy.tab.platforms.paper.nms.storage.nms.NMSStorage;
 import me.neznamy.tab.platforms.paper.nms.storage.packet.*;
-import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
-
-import java.util.UUID;
 
 public class PaperPacketBuilder extends PacketBuilder {
 
@@ -32,7 +25,7 @@ public class PaperPacketBuilder extends PacketBuilder {
 
     @Override
     public Object build(PacketPlayOutBoss packet, ProtocolVersion clientVersion) throws ReflectiveOperationException {
-        return packet
+        return packet;
     }
 
     @Override
@@ -53,41 +46,5 @@ public class PaperPacketBuilder extends PacketBuilder {
     @Override
     public PacketPlayOutScoreboardDisplayObjective readDisplayObjective(Object nmsPacket) throws ReflectiveOperationException {
         return PacketPlayOutScoreboardDisplayObjectiveStorage.read(nmsPacket);
-    }
-
-    /**
-     * Builds entity packet representing requested BossBar packet using Wither on 1.8- clients.
-     *
-     * @param   packet
-     *          packet to build
-     * @param   clientVersion
-     *          client version
-     * @return  entity BossBar packet
-     * @throws  ReflectiveOperationException
-     *          if thrown by reflective operation
-     */
-    private Object buildBossPacketEntity(PacketPlayOutBoss packet, ProtocolVersion clientVersion) throws ReflectiveOperationException {
-        if (packet.getAction() == Action.UPDATE_STYLE) return null; //nothing to do here
-
-        int entityId = packet.getId().hashCode();
-        if (packet.getAction() == Action.REMOVE) {
-            return new PacketPlayOutEntityDestroy(entityId).build();
-        }
-        DataWatcher w = new DataWatcher();
-        if (packet.getAction() == Action.UPDATE_PCT || packet.getAction() == Action.ADD) {
-            float health = 300*packet.getPct();
-            if (health == 0) health = 1;
-            w.getHelper().setHealth(health);
-        }
-        if (packet.getAction() == Action.UPDATE_NAME || packet.getAction() == Action.ADD) {
-            w.getHelper().setCustomName(packet.getName(), clientVersion);
-        }
-        if (packet.getAction() == Action.ADD) {
-            w.getHelper().setEntityFlags((byte) 32);
-            w.getHelper().setWitherInvulnerableTime(880); // Magic number
-            return new PacketPlayOutSpawnEntityLiving(entityId, new UUID(0, 0), EntityType.WITHER, new Location(null, 0,0,0), w).build();
-        } else {
-            return new PacketPlayOutEntityMetadata(entityId, w).build();
-        }
     }
 }

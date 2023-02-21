@@ -1,7 +1,6 @@
 package me.neznamy.tab.platforms.paper;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import io.netty.channel.Channel;
 import lombok.NonNull;
 import me.neznamy.tab.api.chat.rgb.RGBUtils;
@@ -68,13 +67,7 @@ public class PaperTabPlayer extends ITabPlayer {
 
     @Override
     public int getPing() {
-        try {
-            int ping = NMSStorage.getInstance().PING.getInt(handle);
-            if (ping > 10000 || ping < 0) ping = -1;
-            return ping;
-        } catch (IllegalAccessException e) {
-            return -1;
-        }
+        return getPlayer().getPing();
     }
 
     @Override
@@ -107,7 +100,7 @@ public class PaperTabPlayer extends ITabPlayer {
         BossBar bar = bossBars.get(packet.getId());
         if (packet.getAction() == PacketPlayOutBoss.Action.ADD) {
             if (bossBars.containsKey(packet.getId())) return;
-            bar = Bukkit.createBossBar(RGBUtils.getInstance().convertToBukkitFormat(packet.getName(), getVersion().getMinorVersion() >= 16 && TAB.getInstance().getServerVersion().getMinorVersion() >= 16),
+            bar = Bukkit.createBossBar(RGBUtils.getInstance().convertToBukkitFormat(packet.getName(), getVersion().getMinorVersion() >= 16),
                     BarColor.valueOf(packet.getColor().name()),
                     BarStyle.valueOf(packet.getOverlay().getBukkitName()));
             if (packet.isCreateWorldFog()) bar.addFlag(BarFlag.CREATE_FOG);
@@ -128,7 +121,7 @@ public class PaperTabPlayer extends ITabPlayer {
             bar.setProgress(packet.getPct());
             break;
         case UPDATE_NAME:
-            bar.setTitle(RGBUtils.getInstance().convertToBukkitFormat(packet.getName(), getVersion().getMinorVersion() >= 16 && TAB.getInstance().getServerVersion().getMinorVersion() >= 16));
+            bar.setTitle(RGBUtils.getInstance().convertToBukkitFormat(packet.getName(), getVersion().getMinorVersion() >= 16));
             break;
         case UPDATE_STYLE:
             bar.setColor(BarColor.valueOf(packet.getColor().name()));
@@ -168,27 +161,26 @@ public class PaperTabPlayer extends ITabPlayer {
     @Override
     public boolean isDisguised() {
         try {
-            if (!((BukkitPlatform)TAB.getInstance().getPlatform()).isLibsDisguisesEnabled()) return false;
+            if (!((PaperPlatform)TAB.getInstance().getPlatform()).isLibsDisguisesEnabled()) return false;
             return (boolean) Class.forName("me.libraryaddict.disguise.DisguiseAPI").getMethod("isDisguised", Entity.class).invoke(null, getPlayer());
         } catch (LinkageError | ReflectiveOperationException e) {
             //java.lang.NoClassDefFoundError: Could not initialize class me.libraryaddict.disguise.DisguiseAPI
             TAB.getInstance().getErrorManager().printError("Failed to check disguise status using LibsDisguises", e);
-            ((BukkitPlatform)TAB.getInstance().getPlatform()).setLibsDisguisesEnabled(false);
+            ((PaperPlatform)TAB.getInstance().getPlatform()).setLibsDisguisesEnabled(false);
             return false;
         }
     }
 
     @Override
     public Skin getSkin() {
-        try {
-            Collection<Property> col = ((GameProfile)NMSStorage.getInstance().getProfile.invoke(handle)).getProperties().get("textures");
-            if (col.isEmpty()) return null; //offline mode
-            Property property = col.iterator().next();
-            return new Skin(property.getValue(), property.getSignature());
-        } catch (ReflectiveOperationException e) {
-            TAB.getInstance().getErrorManager().printError("Failed to get skin of " + getName(), e);
-            return null;
+        Collection<ProfileProperty> col = getPlayer().getPlayerProfile().getProperties();
+        if (col.isEmpty()) return null; //offline mode
+        for (ProfileProperty property : col) {
+            if (property.getName().equals("textures")) {
+                return new Skin(property.getValue(), property.getSignature());
+            }
         }
+        return null;
     }
 
     @Override

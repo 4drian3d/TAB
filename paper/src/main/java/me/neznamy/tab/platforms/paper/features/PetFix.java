@@ -5,7 +5,6 @@ import me.neznamy.tab.api.TabFeature;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityMetadata;
 import me.neznamy.tab.platforms.paper.nms.PacketPlayOutSpawnEntityLiving;
-import me.neznamy.tab.platforms.paper.nms.datawatcher.DataWatcherObject;
 import me.neznamy.tab.platforms.paper.nms.storage.nms.NMSStorage;
 import me.neznamy.tab.platforms.paper.nms.datawatcher.DataWatcher;
 import me.neznamy.tab.platforms.paper.nms.datawatcher.DataWatcherItem;
@@ -60,22 +59,8 @@ public class PetFix extends TabFeature {
      * @return  position of pet owner field based on server version
      */
     private int getPetOwnerPosition() {
-        if (nms.getMinorVersion() >= 17) {
-            //1.17.x, 1.18.x, 1.19.x
-            return 18;
-        } else if (nms.getMinorVersion() >= 15) {
-            //1.15.x, 1.16.x
-            return 17;
-        } else if (nms.getMinorVersion() >= 14) {
-            //1.14.x
-            return 16;
-        } else if (nms.getMinorVersion() >= 10) {
-            //1.10.x - 1.13.x
-            return 14;
-        } else {
-            //1.9.x
-            return 13;
-        }
+        // 1.17+
+        return 18;
     }
 
     /**
@@ -105,11 +90,7 @@ public class PetFix extends TabFeature {
      * @return {@code true} if action is INTERACT, {@code false} if not.
      */
     private boolean isInteract(Object action) {
-        if (nms.getMinorVersion() >= 17) {
-            return nms.PacketPlayInUseEntity$d.isInstance(action);
-        } else {
-            return action.toString().equals("INTERACT");
-        }
+        return nms.PacketPlayInUseEntity$d.isInstance(action);
     }
 
     /**
@@ -128,15 +109,8 @@ public class PetFix extends TabFeature {
             try {
                 for (Object item : items) {
                     if (item == null) continue;
-                    int slot;
-                    Object value;
-                    if (nms.is1_19_3Plus()) {
-                        slot = DataWatcher.DataValue_POSITION.getInt(item);
-                        value = DataWatcher.DataValue_VALUE.get(item);
-                    } else {
-                        slot = DataWatcherObject.SLOT.getInt(DataWatcherItem.TYPE.get(item));
-                        value = DataWatcherItem.VALUE.get(item);
-                    }
+                    int slot = DataWatcher.DataValue_POSITION.getInt(item);
+                    Object value = DataWatcher.DataValue_VALUE.get(item);
                     if (slot == petOwnerPosition) {
                         if (value instanceof Optional || value instanceof com.google.common.base.Optional) {
                             removedEntry = item;

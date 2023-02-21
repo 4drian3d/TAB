@@ -25,7 +25,6 @@ public class PacketPlayOutScoreboardScoreStorage {
     }
 
     public static Object build(PacketPlayOutScoreboardScore packet, ProtocolVersion clientVersion) throws ReflectiveOperationException {
-        NMSStorage nms = NMSStorage.getInstance();
         return CONSTRUCTOR_1_13.newInstance(Enum.valueOf(EnumScoreboardAction, packet.getAction().toString()), packet.getObjectiveName(), packet.getPlayer(), packet.getScore());
     }
 }

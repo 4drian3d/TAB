@@ -1,6 +1,5 @@
 package me.neznamy.tab.platforms.paper.features.unlimitedtags;
 
-import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabConstants;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.protocol.TabPacket;
@@ -21,7 +20,7 @@ import org.bukkit.entity.Pose;
 /**
  * A class representing an armor stand attached to a player
  */
-public class BukkitArmorStand extends BackendArmorStand {
+public class PaperArmorStand extends BackendArmorStand {
 
     /** Owner as a Bukkit player */
     private final Player player;
@@ -43,7 +42,7 @@ public class BukkitArmorStand extends BackendArmorStand {
      * @param   staticOffset
      *          {@code true} if offset is static, {@code false} if not
      */
-    public BukkitArmorStand(BackendNameTagX feature, BackendArmorStandManager asm, TabPlayer owner, String propertyName, double yOffset, boolean staticOffset) {
+    public PaperArmorStand(BackendNameTagX feature, BackendArmorStandManager asm, TabPlayer owner, String propertyName, double yOffset, boolean staticOffset) {
         super(feature, asm, owner, propertyName, yOffset, staticOffset);
         player = (Player) owner.getPlayer();
         sneaking = player.isSneaking();
@@ -80,18 +79,18 @@ public class BukkitArmorStand extends BackendArmorStand {
             if (vehicle.getType().toString().contains("horse")) { //covering all 3 horse types
                 y = vehicle.getLocation().getY() + 0.85;
             }
-            if (vehicle.getType().toString().equals("donkey")) { //1.11+
+            if (vehicle.getType() == EntityType.DONKEY) { //1.11+
                 y = vehicle.getLocation().getY() + 0.525;
             }
             if (vehicle.getType() == EntityType.PIG) {
                 y = vehicle.getLocation().getY() + 0.325;
             }
-            if (vehicle.getType().toString().equals("strider")) { //1.16+
+            if (vehicle.getType() == EntityType.STRIDER) { //1.16+
                 y = vehicle.getLocation().getY() + 1.15;
             }
         } else {
             //1.13+ swimming or 1.9+ flying with elytra
-            if (isSwimming() || (TabAPI.getInstance().getServerVersion().getMinorVersion() >= 9 && player.isGliding())) {
+            if (isSwimming() || player.isGliding()) {
                 y = loc.getY()-1.22;
             }
         }
@@ -115,23 +114,16 @@ public class BukkitArmorStand extends BackendArmorStand {
      * @return  {@code true} if owner is swimming, {@code false} if not
      */
     private boolean isSwimming() {
-        if (TabAPI.getInstance().getServerVersion().getMinorVersion() >= 14 && player.getPose() == Pose.SWIMMING) return true;
-        return TabAPI.getInstance().getServerVersion().getMinorVersion() == 13 && player.isSwimming();
+        return player.getPose() == Pose.SWIMMING;
     }
 
     private TabPacket[] getSpawnPackets(TabPlayer viewer) {
         visible = calculateVisibility();
         DataWatcher dataWatcher = createDataWatcher(property.getFormat(viewer), viewer);
-        if (TabAPI.getInstance().getServerVersion().getMinorVersion() >= 15) {
-            return new TabPacket[] {
-                    new PacketPlayOutSpawnEntityLiving(entityId, uuid, EntityType.ARMOR_STAND, getLocation(viewer), null),
-                    new PacketPlayOutEntityMetadata(entityId, dataWatcher)
-            };
-        } else {
-            return new TabPacket[] {
-                    new PacketPlayOutSpawnEntityLiving(entityId, uuid, EntityType.ARMOR_STAND, getLocation(viewer), dataWatcher),
-            };
-        }
+        return new TabPacket[] {
+            new PacketPlayOutSpawnEntityLiving(entityId, uuid, EntityType.ARMOR_STAND, getLocation(viewer), null),
+            new PacketPlayOutEntityMetadata(entityId, dataWatcher)
+        };
     }
 
     /**

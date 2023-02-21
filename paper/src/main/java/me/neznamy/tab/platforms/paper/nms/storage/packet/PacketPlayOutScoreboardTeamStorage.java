@@ -93,13 +93,6 @@ public class PacketPlayOutScoreboardTeamStorage {
         ScoreboardTeam_setCollisionRule.invoke(team, Enum.valueOf(EnumTeamPush, String.valueOf(packet.getCollisionRule()).equals("always") ? "ALWAYS" : "NEVER"));
     }
 
-    private static void createTeamLegacy(PacketPlayOutScoreboardTeam packet, Object team, String prefix, String suffix, NMSStorage nms) throws ReflectiveOperationException {
-        if (prefix != null) ScoreboardTeam_setPrefix.invoke(team, prefix);
-        if (suffix != null) ScoreboardTeam_setSuffix.invoke(team, suffix);
-        ScoreboardTeam_setNameTagVisibility.invoke(team, Enum.valueOf(EnumNameTagVisibility, String.valueOf(packet.getNameTagVisibility()).equals("always") ? "ALWAYS" : "NEVER"));
-        ScoreboardTeam_setCollisionRule.invoke(team, Enum.valueOf(EnumTeamPush, String.valueOf(packet.getCollisionRule()).equals("always") ? "ALWAYS" : "NEVER"));
-    }
-
     private static List<Field> getInstanceFields(Class<?> clazz, Class<?> type) {
         List<Field> list = new ArrayList<>();
         for (Field field : clazz.getDeclaredFields()) {
