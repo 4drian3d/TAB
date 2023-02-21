@@ -1,0 +1,25 @@
+name: @name@
+version: @version@
+author: NEZNAMY
+main: me.neznamy.tab.platforms.paper.PaperTAB
+api-version: '1.19'
+website: "@website@"
+description: @description@
+
+dependencies:
+  - name: PlaceholderAPI
+    required: false
+  - name: Vault
+    required: false
+  - name: LuckPerms
+    required: false
+  - name: Essentials
+    required: false
+  - name: LibsDisguises
+    required: false
+  - name: ProtocolSupport
+    required: false
+  - name: ViaVersion
+    required: false
+  - name: floodgate
+    required: false

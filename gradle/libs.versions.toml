@@ -24,6 +24,7 @@ krypton = "a81b4baaed" # Krypton uses commit-based versioning
 velocity = "3.1.2-SNAPSHOT"
 sponge7 = "7.4.0"
 sponge8 = "8.1.0"
+purpur = "1.19.3-R0.1-SNAPSHOT"
 
 # Platform extras
 placeholderapi = "2.11.2"
@@ -66,6 +67,7 @@ krypton-annotationProcessor = { group = "org.kryptonmc", name = "krypton-annotat
 velocity = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity" }
 sponge7 = { group = "org.spongepowered", name = "spongeapi", version.ref = "sponge7" }
 sponge8 = { group = "org.spongepowered", name = "spongeapi", version.ref = "sponge8" }
+purpur = { group = "org.purpurmc.purpur", name = "purpur-api", version.ref = "purpur" }
 
 # Platform extras
 placeholderapi = { group = "me.clip", name = "placeholderapi", version.ref = "placeholderapi" }

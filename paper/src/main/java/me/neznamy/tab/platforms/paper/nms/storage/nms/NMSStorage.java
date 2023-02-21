@@ -1,4 +1,4 @@
-package me.neznamy.tab.platforms.bukkit.nms.storage.nms;
+package me.neznamy.tab.platforms.paper.nms.storage.nms;
 
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.Channel;
@@ -10,14 +10,14 @@ import me.neznamy.tab.api.chat.IChatBaseComponent;
 import me.neznamy.tab.api.chat.WrappedChatComponent;
 import me.neznamy.tab.api.util.ComponentCache;
 import me.neznamy.tab.api.util.ReflectionUtils;
-import me.neznamy.tab.platforms.bukkit.nms.PacketPlayOutEntityDestroy;
-import me.neznamy.tab.platforms.bukkit.nms.PacketPlayOutEntityMetadata;
-import me.neznamy.tab.platforms.bukkit.nms.PacketPlayOutEntityTeleport;
-import me.neznamy.tab.platforms.bukkit.nms.PacketPlayOutSpawnEntityLiving;
-import me.neznamy.tab.platforms.bukkit.nms.datawatcher.DataWatcher;
-import me.neznamy.tab.platforms.bukkit.nms.datawatcher.DataWatcherItem;
-import me.neznamy.tab.platforms.bukkit.nms.datawatcher.DataWatcherObject;
-import me.neznamy.tab.platforms.bukkit.nms.storage.packet.*;
+import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityDestroy;
+import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityMetadata;
+import me.neznamy.tab.platforms.paper.nms.PacketPlayOutEntityTeleport;
+import me.neznamy.tab.platforms.paper.nms.PacketPlayOutSpawnEntityLiving;
+import me.neznamy.tab.platforms.paper.nms.datawatcher.DataWatcher;
+import me.neznamy.tab.platforms.paper.nms.datawatcher.DataWatcherItem;
+import me.neznamy.tab.platforms.paper.nms.datawatcher.DataWatcherObject;
+import me.neznamy.tab.platforms.paper.nms.storage.packet.*;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.Constructor;
@@ -44,7 +44,7 @@ public abstract class NMSStorage {
     @Getter protected final int minorVersion = Integer.parseInt(serverPackage.split("_")[1]);
 
     /** Flag determining whether the server version is at least 1.19.3 or not */
-    @Getter private final boolean is1_19_3Plus = true;
+    @Getter private final boolean is1_19_3Plus = ReflectionUtils.classExists("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket");
 
     /** Basic universal values */
     protected Class<?> Packet;
@@ -106,12 +106,16 @@ public abstract class NMSStorage {
     public NMSStorage() throws ReflectiveOperationException {
         ProtocolVersion.UNKNOWN_SERVER_VERSION.setMinorVersion(minorVersion); //fixing compatibility with forks that set version field value to "Unknown"
         loadClasses();
-        NETWORK_MANAGER = getFields(PlayerConnection, NetworkManager).get(0);
-        CHANNEL = getFields(NetworkManager, Channel.class).get(0);
-        getProfile = getMethods(EntityHuman, GameProfile.class).get(0);
-        Constructor<?> newEntityArmorStand = EntityArmorStand.getConstructor(World, double.class, double.class, double.class);
-        Method World_getHandle = Class.forName("org.bukkit.craftbukkit." + serverPackage + ".CraftWorld").getMethod("getHandle");
-        dummyEntity = newEntityArmorStand.newInstance(World_getHandle.invoke(Bukkit.getWorlds().get(0)), 0, 0, 0);
+        if (minorVersion >= 7) {
+            NETWORK_MANAGER = getFields(PlayerConnection, NetworkManager).get(0);
+        }
+        if (minorVersion >= 8) {
+            CHANNEL = getFields(NetworkManager, Channel.class).get(0);
+            getProfile = getMethods(EntityHuman, GameProfile.class).get(0);
+            Constructor<?> newEntityArmorStand = EntityArmorStand.getConstructor(World, double.class, double.class, double.class);
+            Method World_getHandle = Class.forName("org.bukkit.craftbukkit." + serverPackage + ".CraftWorld").getMethod("getHandle");
+            dummyEntity = newEntityArmorStand.newInstance(World_getHandle.invoke(Bukkit.getWorlds().get(0)), 0, 0, 0);
+        }
         PLAYER_CONNECTION = getFields(EntityPlayer, PlayerConnection).get(0);
         getHandle = Class.forName("org.bukkit.craftbukkit." + serverPackage + ".entity.CraftPlayer").getMethod("getHandle");
         sendPacket = getMethods(PlayerConnection, void.class, Packet).get(0);
@@ -278,6 +282,9 @@ public abstract class NMSStorage {
      *          if thrown by reflective operation
      */
     public Object newScoreboardObjective(String objectiveName) throws ReflectiveOperationException {
+        if (minorVersion >= 13) {
+            return PacketPlayOutScoreboardObjectiveStorage.newScoreboardObjective.newInstance(null, objectiveName, null, toNMSComponent(new IChatBaseComponent(""), TabAPI.getInstance().getServerVersion()), null);
+        }
         return PacketPlayOutScoreboardObjectiveStorage.newScoreboardObjective.newInstance(null, objectiveName, IScoreboardCriteria_self.get(null));
     }
 }
